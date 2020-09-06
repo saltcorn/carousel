@@ -111,7 +111,7 @@ const run = async (
         { class: "carousel-indicators" },
         sresps.map((htmlrow, ix) =>
           li({
-            "data-target": "#carouselExampleIndicators",
+            "data-target": "#carouselExampleControls",
             "data-slide-to": `${ix}`,
             class: [ix === 0 && "active"],
           })
