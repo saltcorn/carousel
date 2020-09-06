@@ -33,17 +33,32 @@ const configuration_workflow = () =>
               viewrow.name !== context.viewname
           );
           const slide_view_opts = slide_views.map((v) => v.name);
+          const caption_views = await View.find_table_views_where(
+            context.table_id,
+            ({ viewtemplate, viewrow }) =>
+              viewtemplate.renderRows && viewrow.name !== context.viewname
+          );
+          const caption_view_opts = caption_views.map((v) => v.name);
 
           return new Form({
             fields: [
               {
                 name: "slide_view",
                 label: "Slide view",
-                sublabel: "Blank for no popup",
                 type: "String",
                 required: true,
                 attributes: {
                   options: slide_view_opts.join(),
+                },
+              },
+              {
+                name: "caption_view",
+                label: "Caption overlay view",
+                sublabel: "Blank for no caption",
+                type: "String",
+                required: false,
+                attributes: {
+                  options: caption_view_opts.join(),
                 },
               },
               {
@@ -84,7 +99,7 @@ const get_state_fields = async (table_id) => {
 const run = async (
   table_id,
   viewname,
-  { slide_view, indicators, controls },
+  { slide_view, caption_view, indicators, controls },
   state,
   extraArgs
 ) => {
@@ -97,6 +112,19 @@ const run = async (
     );
 
   const sresps = await sview.runMany(state, extraArgs);
+
+  var capresps;
+  if (caption_view) {
+    const capview = await View.findOne({ name: caption_view });
+    const table = await Table.findOne({ id: table_id });
+    capresps = await capview.viewtemplateObj.renderRows(
+      table,
+      capview.name,
+      capview.configuration,
+      extraArgs,
+      sresps.map((sr) => sr.row)
+    );
+  }
 
   if (sresps.length === 0) return div("No slides");
 
@@ -122,7 +150,9 @@ const run = async (
       sresps.map(({ html, row }, ix) =>
         div(
           { class: ["carousel-item", ix == 0 && "active"] },
-          div({ class: "d-block w-100" }, html)
+          div({ class: "d-block w-100" }, html),
+          caption_view &&
+            div({ class: "carousel-caption d-none d-md-block" }, capresps[ix])
         )
       )
     ),
