@@ -119,9 +119,9 @@ const run = async (
       ),
     div(
       { class: "carousel-inner" },
-      sresps.map(({ html, row }) =>
+      sresps.map(({ html, row }, ix) =>
         div(
-          { class: "carousel-item active" },
+          { class: ["carousel-item", ix == 0 && "active"] },
           div({ class: "d-block w-100" }, html)
         )
       )
