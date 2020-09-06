@@ -5,6 +5,10 @@ const {
   script,
   domReady,
   style,
+  ol,
+  li,
+  a,
+  span,
 } = require("@saltcorn/markup/tags");
 const View = require("@saltcorn/data/models/view");
 const Workflow = require("@saltcorn/data/models/workflow");
@@ -102,16 +106,17 @@ const run = async (
       class: "carousel slide",
       "data-ride": "carousel",
     },
-    ol(
-      { class: "carousel-indicators" },
-      sresps.map((htmlrow, ix) =>
-        li({
-          "data-target": "#carouselExampleIndicators",
-          "data-slide-to": `${ix}`,
-          class: [ix === 0 && "active"],
-        })
-      )
-    ),
+    indicators &&
+      ol(
+        { class: "carousel-indicators" },
+        sresps.map((htmlrow, ix) =>
+          li({
+            "data-target": "#carouselExampleIndicators",
+            "data-slide-to": `${ix}`,
+            class: [ix === 0 && "active"],
+          })
+        )
+      ),
     div(
       { class: "carousel-inner" },
       sresps.map(({ html, row }) =>
@@ -150,7 +155,7 @@ module.exports = {
   sc_plugin_api_version: 1,
   viewtemplates: [
     {
-      name: "Slider",
+      name: "Carousel",
       display_state_form: false,
       get_state_fields,
       configuration_workflow,
