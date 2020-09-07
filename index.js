@@ -73,6 +73,12 @@ const configuration_workflow = () =>
                 type: "Bool",
                 required: true,
               },
+              {
+                name: "dark_ctrl",
+                label: "Dark controls and indicators",
+                type: "Bool",
+                required: true,
+              },
             ],
           });
         },
@@ -99,7 +105,7 @@ const get_state_fields = async (table_id) => {
 const run = async (
   table_id,
   viewname,
-  { slide_view, caption_view, indicators, controls },
+  { slide_view, caption_view, indicators, controls, dark_ctrl },
   state,
   extraArgs
 ) => {
@@ -177,6 +183,12 @@ const run = async (
         },
         span({ class: "carousel-control-next-icon", "aria-hidden": "true" }),
         span({ class: "sr-only" }, "Next")
+      ),
+    dark_ctrl &&
+      style(
+        `.carousel-indicators li.active{ background-color: #222;} 
+.carousel-indicators li {background-color: #999;}
+.carousel-control-next,.carousel-control-prev {filter: invert(90%);}`
       )
   );
 };
