@@ -1,6 +1,6 @@
 {
   "name": "@saltcorn/carousel",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Corousel slides view templates",
   "main": "index.js",
   "dependencies": {
