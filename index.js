@@ -198,6 +198,7 @@ module.exports = {
   viewtemplates: [
     {
       name: "Carousel",
+      description: "Slideshow of the underlying view",
       display_state_form: false,
       get_state_fields,
       configuration_workflow,
