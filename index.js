@@ -79,6 +79,13 @@ const configuration_workflow = () =>
                 type: "Bool",
                 required: true,
               },
+              {
+                name: "reload",
+                label: "Reload cycled",
+                sublabel: "Reload the page when the slide cycle has completed",
+                type: "Bool",
+                required: true,
+              },
             ],
           });
         },
@@ -105,7 +112,7 @@ const get_state_fields = async (table_id) => {
 const run = async (
   table_id,
   viewname,
-  { slide_view, caption_view, indicators, controls, dark_ctrl },
+  { slide_view, caption_view, indicators, controls, dark_ctrl, reload },
   state,
   extraArgs
 ) => {
@@ -191,6 +198,15 @@ const run = async (
         `.carousel-indicators li.active{ background-color: #222;} 
 .carousel-indicators li {background-color: #999;}
 .carousel-control-next,.carousel-control-prev {filter: invert(90%);}`
+      ),
+    reload &&
+      script(
+        domReady(`
+  document.getElementById('carousel').addEventListener('slid.bs.carousel', event => {
+  if(event && event.to===0) {
+    location.reload()
+  }
+})`)
       )
   );
 };
