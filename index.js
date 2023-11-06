@@ -141,16 +141,16 @@ const run = async (
       "data-bs-ride": "carousel",
     },
     indicators &&
-    ol(
-      { class: "carousel-indicators" },
-      sresps.map((htmlrow, ix) =>
-        li({
-          "data-bs-target": "#carousel",
-          "data-bs-slide-to": `${ix}`,
-          class: [ix === 0 && "active"],
-        })
-      )
-    ),
+      ol(
+        { class: "carousel-indicators" },
+        sresps.map((htmlrow, ix) =>
+          li({
+            "data-bs-target": "#carousel",
+            "data-bs-slide-to": `${ix}`,
+            class: [ix === 0 && "active"],
+          })
+        )
+      ),
     div(
       { class: "carousel-inner" },
       sresps.map(({ html, row }, ix) =>
@@ -158,40 +158,40 @@ const run = async (
           { class: ["carousel-item", ix == 0 && "active"] },
           div({ class: "d-block w-100" }, html),
           caption_view &&
-          div({ class: "carousel-caption d-none d-md-block" }, capresps[ix])
+            div({ class: "carousel-caption d-none d-md-block" }, capresps[ix])
         )
       )
     ),
     controls &&
-    a(
-      {
-        class: "carousel-control-prev",
-        //href: "#carouselExampleControls",
-        role: "button",
-        "data-bs-target": "#carousel",
-        "data-bs-slide": "prev",
-      },
-      span({ class: "carousel-control-prev-icon", "aria-hidden": "true" }),
-      span({ class: "sr-only" }, "Previous")
-    ),
+      a(
+        {
+          class: "carousel-control-prev",
+          //href: "#carouselExampleControls",
+          role: "button",
+          "data-bs-target": "#carousel",
+          "data-bs-slide": "prev",
+        },
+        span({ class: "carousel-control-prev-icon", "aria-hidden": "true" }),
+        span({ class: "sr-only" }, "Previous")
+      ),
     controls &&
-    a(
-      {
-        class: "carousel-control-next",
-        //href: "#carouselExampleControls",
-        "data-bs-target": "#carousel",
-        role: "button",
-        "data-bs-slide": "next",
-      },
-      span({ class: "carousel-control-next-icon", "aria-hidden": "true" }),
-      span({ class: "sr-only" }, "Next")
-    ),
+      a(
+        {
+          class: "carousel-control-next",
+          //href: "#carouselExampleControls",
+          "data-bs-target": "#carousel",
+          role: "button",
+          "data-bs-slide": "next",
+        },
+        span({ class: "carousel-control-next-icon", "aria-hidden": "true" }),
+        span({ class: "sr-only" }, "Next")
+      ),
     dark_ctrl &&
-    style(
-      `.carousel-indicators li.active{ background-color: #222;} 
+      style(
+        `.carousel-indicators li.active{ background-color: #222;} 
 .carousel-indicators li {background-color: #999;}
 .carousel-control-next,.carousel-control-prev {filter: invert(90%);}`
-    )
+      )
   );
 };
 
