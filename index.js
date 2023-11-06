@@ -74,6 +74,13 @@ const configuration_workflow = () =>
                 required: true,
               },
               {
+                name: "hover_pause",
+                label: "Hover pause",
+                sublabel: "Pause transitions if mouse hovers over slide",
+                type: "Bool",
+                required: true,
+              },
+              {
                 name: "dark_ctrl",
                 label: "Dark controls and indicators",
                 type: "Bool",
@@ -112,7 +119,15 @@ const get_state_fields = async (table_id) => {
 const run = async (
   table_id,
   viewname,
-  { slide_view, caption_view, indicators, controls, dark_ctrl, reload },
+  {
+    slide_view,
+    caption_view,
+    indicators,
+    controls,
+    dark_ctrl,
+    reload,
+    hover_pause,
+  },
   state,
   extraArgs
 ) => {
@@ -146,6 +161,7 @@ const run = async (
       id: "carousel",
       class: "carousel slide",
       "data-bs-ride": "carousel",
+      "data-bs-pause": hover_pause ? "hover" : "false",
     },
     indicators &&
       ol(
