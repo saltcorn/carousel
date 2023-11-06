@@ -62,6 +62,13 @@ const configuration_workflow = () =>
                 },
               },
               {
+                name: "interval",
+                label: "Interval (ms)",
+                type: "Integer",
+                default: 5000,
+                required: true,
+              },
+              {
                 name: "controls",
                 label: "Show controls",
                 type: "Bool",
@@ -127,6 +134,7 @@ const run = async (
     dark_ctrl,
     reload,
     hover_pause,
+    interval,
   },
   state,
   extraArgs
@@ -162,6 +170,7 @@ const run = async (
       class: "carousel slide",
       "data-bs-ride": "carousel",
       "data-bs-pause": hover_pause ? "hover" : "false",
+      "data-bs-interval": interval || undefined,
     },
     indicators &&
       ol(
