@@ -40,6 +40,10 @@ const configuration_workflow = () =>
           );
           const caption_view_opts = caption_views.map((v) => v.name);
 
+          const num_fields = fields.filter(
+            (f) => f?.type?.name === "Integer" || f?.type?.name === "Float"
+          );
+
           return new Form({
             fields: [
               {
@@ -62,11 +66,23 @@ const configuration_workflow = () =>
                 },
               },
               {
-                name: "interval",
-                label: "Interval (ms)",
+                name: "default_interval",
+                label: "Interval (s)",
                 type: "Integer",
-                default: 5000,
+                sublabel:
+                  "Default interval if no interval field is specified or is missing",
+                default: 10,
                 required: true,
+              },
+              {
+                name: "interval_field",
+                label: "Interval field",
+                sublabel: "Integer or Float field with interval in seconds",
+                type: "String",
+                required: false,
+                attributes: {
+                  options: num_fields.map((f) => f.name),
+                },
               },
               {
                 name: "controls",
@@ -134,7 +150,8 @@ const run = async (
     dark_ctrl,
     reload,
     hover_pause,
-    interval,
+    default_interval,
+    interval_field,
   },
   state,
   extraArgs
@@ -170,7 +187,9 @@ const run = async (
       class: "carousel slide",
       "data-bs-ride": "carousel",
       "data-bs-pause": hover_pause ? "hover" : "false",
-      "data-bs-interval": interval || undefined,
+      "data-bs-interval": default_interval
+        ? default_interval * 1000
+        : undefined,
     },
     indicators &&
       ol(
@@ -187,7 +206,13 @@ const run = async (
       { class: "carousel-inner" },
       sresps.map(({ html, row }, ix) =>
         div(
-          { class: ["carousel-item", ix == 0 && "active"] },
+          {
+            class: ["carousel-item", ix == 0 && "active"],
+            "data-bs-interval":
+              interval_field && row[interval_field]
+                ? +row[interval_field] * 1000
+                : false,
+          },
           div({ class: "d-block w-100" }, html),
           caption_view &&
             div({ class: "carousel-caption d-none d-md-block" }, capresps[ix])
