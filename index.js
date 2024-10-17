@@ -273,4 +273,5 @@ module.exports = {
       run,
     },
   ],
+  ready_for_mobile: true,
 };
