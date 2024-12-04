@@ -116,6 +116,12 @@ const configuration_workflow = () =>
                 type: "Bool",
                 required: true,
               },
+              {
+                name: "on_demand",
+                label: "Load on demand",
+                sublabel: "Load each slide view as shown",
+                type: "Bool",
+              },
             ],
           });
         },
@@ -152,6 +158,7 @@ const run = async (
     hover_pause,
     default_interval,
     interval_field,
+    on_demand,
   },
   state,
   extraArgs
@@ -165,11 +172,11 @@ const run = async (
     );
 
   const sresps = await sview.runMany(state, extraArgs);
+  const table = await Table.findOne({ id: table_id });
 
   var capresps;
   if (caption_view) {
     const capview = await View.findOne({ name: caption_view });
-    const table = await Table.findOne({ id: table_id });
     capresps = await capview.viewtemplateObj.renderRows(
       table,
       capview.name,
@@ -212,8 +219,13 @@ const run = async (
               interval_field && row[interval_field]
                 ? +row[interval_field] * 1000
                 : false,
+            "data-view-source-url": on_demand
+              ? `/view/${encodeURI(slide_view)}?${table.pk_name}=${
+                  row[table.pk_name]
+                }`
+              : undefined,
           },
-          div({ class: "d-block w-100" }, html),
+          div({ class: "d-block w-100" }, (!on_demand || ix == 0) && html),
           caption_view &&
             div({ class: "carousel-caption d-none d-md-block" }, capresps[ix])
         )
@@ -256,6 +268,30 @@ const run = async (
   if(event && event.to===0) {
     location.reload()
   }
+})`)
+      ),
+    on_demand &&
+      script(
+        domReady(`
+  document.getElementById('carousel').addEventListener('slide.bs.carousel', event => {
+  const $eparent=$(event.relatedTarget)
+  const $etarget=$eparent.find("div.d-block")
+  const url = $eparent.attr("data-view-source-url")
+  $.ajax(url, {
+        headers: {
+          pjaxpageload: "true",
+          localizedstate: "true", //no admin bar
+        },
+        success: function (res, textStatus, request) {
+          $etarget.html(res);   
+          initialize_page();
+        },
+        error: function (res) {
+          if (!checkNetworkError(res))
+            notifyAlert({ type: "danger", text: res.responseText });
+          if ($e.html() === "Loading...") $e.html("");
+        },
+      });
 })`)
       )
   );
