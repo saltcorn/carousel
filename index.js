@@ -122,6 +122,12 @@ const configuration_workflow = () =>
                 sublabel: "Load each slide view as shown",
                 type: "Bool",
               },
+              {
+                name: "cross_fade",
+                label: "Cross fade",
+                sublabel: "Fade instead of sliding",
+                type: "Bool",
+              },
             ],
           });
         },
@@ -159,6 +165,7 @@ const run = async (
     default_interval,
     interval_field,
     on_demand,
+    cross_fade,
   },
   state,
   extraArgs
@@ -200,7 +207,7 @@ const run = async (
   return div(
     {
       id: "carousel",
-      class: "carousel slide",
+      class: ["carousel slide", cross_fade && "carousel-fade"],
       "data-bs-ride": "carousel",
       "data-bs-pause": hover_pause ? "hover" : "false",
       "data-bs-interval": default_interval
