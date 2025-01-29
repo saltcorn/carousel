@@ -186,7 +186,16 @@ const run = async (
     );
   }
 
-  if (sresps.length === 0) return div("No slides");
+  if (sresps.length === 0)
+    return div(
+      "No slides",
+      reload &&
+        script(
+          domReady(
+            `setTimeout(()=>{location.reload()}, ${+default_interval * 1000})`
+          )
+        )
+    );
 
   return div(
     {
@@ -269,6 +278,17 @@ const run = async (
     location.reload()
   }
 })`)
+      ),
+    reload &&
+      sresps.length === 1 &&
+      script(
+        domReady(
+          `setTimeout(()=>{location.reload()}, ${
+            interval_field && sresps[0].row[interval_field]
+              ? +sresps[0].row[interval_field] * 1000
+              : +default_interval * 1000
+          })`
+        )
       ),
     on_demand &&
       script(
