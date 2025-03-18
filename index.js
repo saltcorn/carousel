@@ -282,7 +282,10 @@ const run = async (
         domReady(`
   document.getElementById('carousel').addEventListener('slid.bs.carousel', event => {
   if(event && event.to===0) {
-    location.reload()
+    if (window.saltcorn?.mobileApp?.navigation?.reload)
+      window.saltcorn.mobileApp.navigation.reload();
+    else
+      location.reload();
   }
 })`)
       ),
@@ -336,4 +339,5 @@ module.exports = {
       run,
     },
   ],
+  ready_for_mobile: true,
 };
