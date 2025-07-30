@@ -85,6 +85,16 @@ const configuration_workflow = () =>
                 },
               },
               {
+                name: "order_field",
+                label: "Order by",
+                type: "String",
+                required: true,
+                attributes: {
+                  asideNext: true,
+                  options: fields.map((f) => f.name),
+                },
+              },
+              {
                 name: "controls",
                 label: "Show controls",
                 type: "Bool",
@@ -166,6 +176,7 @@ const run = async (
     interval_field,
     on_demand,
     cross_fade,
+    order_field,
   },
   state,
   extraArgs
@@ -177,8 +188,12 @@ const run = async (
       "Carousel view incorrectly configured. Cannot find view: ",
       slide_view
     );
+  const more_extra = {};
+  if (order_field) {
+    more_extra.orderBy = order_field;
+  }
 
-  const sresps = await sview.runMany(state, extraArgs);
+  const sresps = await sview.runMany(state, { ...extraArgs, ...more_extra });
   const table = await Table.findOne({ id: table_id });
 
   var capresps;
